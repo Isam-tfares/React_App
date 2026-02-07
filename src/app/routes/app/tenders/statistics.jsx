@@ -1,0 +1,14 @@
+import { ContentLayout } from '../../../../components/layouts';
+import { Authorization } from '../../../../lib/authorization';
+
+const TendersStatisticsRoute = () => {
+  return (
+    <ContentLayout title="Statistique AO">
+      <Authorization permission="tenders:view" forbiddenFallback={<div>Accès refusé.</div>}>
+        <h1>Statistiques Appels d'Offres</h1>
+      </Authorization>
+    </ContentLayout>
+  );
+};
+
+export default TendersStatisticsRoute;

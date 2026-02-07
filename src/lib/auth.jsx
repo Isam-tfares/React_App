@@ -2,61 +2,70 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 
 const AuthContext = createContext(null);
 
-// Mock users database
+// Mock users database for your lab system
 const MOCK_USERS = [
   {
     id: '1',
-    email: 'admin@company.com',
+    email: 'admin@lgc.dz',
     password: 'admin123',
     firstName: 'Admin',
-    lastName: 'User',
+    lastName: 'System',
     role: 'SUPER_ADMIN',
     departmentId: '1',
   },
   {
     id: '2',
-    email: 'stocks@company.com',
-    password: 'stocks123',
-    firstName: 'Stock',
-    lastName: 'Manager',
-    role: 'SUPERVISOR_STOCKS',
-    departmentId: '2',
+    email: 'directeur@lgc.dz',
+    password: 'dir123',
+    firstName: 'Mohammed',
+    lastName: 'Directeur',
+    role: 'DIRECTEUR',
+    departmentId: '1',
   },
   {
     id: '3',
-    email: 'finance@company.com',
-    password: 'finance123',
-    firstName: 'Finance',
-    lastName: 'Manager',
-    role: 'SUPERVISOR_FINANCE',
-    departmentId: '3',
-  },
-  {
-    id: '4',
-    email: 'hr@company.com',
-    password: 'hr123',
-    firstName: 'HR',
-    lastName: 'Manager',
-    role: 'SUPERVISOR_HR',
-    departmentId: '4',
-  },
-  {
-    id: '5',
-    email: 'tech@company.com',
-    password: 'tech123',
-    firstName: 'John',
-    lastName: 'Technician',
-    role: 'TECHNICIAN',
+    email: 'responsable@lgc.dz',
+    password: 'resp123',
+    firstName: 'Ahmed',
+    lastName: 'Responsable',
+    role: 'RESPONSABLE_LABO',
     departmentId: '2',
   },
   {
+    id: '4',
+    email: 'technicien@lgc.dz',
+    password: 'tech123',
+    firstName: 'Karim',
+    lastName: 'Technicien',
+    role: 'TECHNICIEN_LABO',
+    departmentId: '2',
+  },
+  {
+    id: '5',
+    email: 'commercial@lgc.dz',
+    password: 'com123',
+    firstName: 'Yacine',
+    lastName: 'Commercial',
+    role: 'COMMERCIAL',
+    departmentId: '3',
+  },
+  {
     id: '6',
-    email: 'employee@company.com',
-    password: 'employee123',
-    firstName: 'Jane',
-    lastName: 'Employee',
-    role: 'EMPLOYEE',
-    departmentId: '1',
+    email: 'comptable@lgc.dz',
+    password: 'compta123',
+    firstName: 'Fatima',
+    lastName: 'Comptable',
+    role: 'COMPTABLE',
+    departmentId: '4',
+  },
+  {
+    id: '7',
+    email: 'rh@lgc.dz',
+    password: 'rh123',
+    firstName: 'Sara',
+    lastName: 'RH',
+    role: 'RH',
+    departmentId: '5',
   },
 ];
 
@@ -64,7 +73,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is authenticated on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -74,21 +82,18 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = useCallback(async (credentials) => {
-    // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const { email, password } = credentials;
     
-    // Find user in mock database
     const foundUser = MOCK_USERS.find(
       (u) => u.email === email && u.password === password
     );
 
     if (!foundUser) {
-      throw new Error('Invalid email or password');
+      throw new Error('Email ou mot de passe incorrect');
     }
 
-    // Remove password from user object before storing
     const { password: _, ...userWithoutPassword } = foundUser;
     
     localStorage.setItem('token', 'mock-jwt-token-' + foundUser.id);
@@ -99,22 +104,19 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const register = useCallback(async (data) => {
-    // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Check if email already exists
     const existingUser = MOCK_USERS.find((u) => u.email === data.email);
     if (existingUser) {
-      throw new Error('Email already registered');
+      throw new Error('Email déjà enregistré');
     }
 
-    // Create new user (in real app, this would be saved to backend)
     const newUser = {
       id: String(MOCK_USERS.length + 1),
       email: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
-      role: 'EMPLOYEE', // Default role for new registrations
+      role: 'EMPLOYEE',
       departmentId: '1',
     };
 

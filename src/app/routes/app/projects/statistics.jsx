@@ -1,0 +1,14 @@
+import { ContentLayout } from '../../../../components/layouts';
+import { Authorization } from '../../../../lib/authorization';
+
+const ProjectsStatisticsRoute = () => {
+  return (
+    <ContentLayout title="Statistique Projets">
+      <Authorization permission="projects:view" forbiddenFallback={<div>Accès refusé.</div>}>
+        <h1>Statistiques Projets</h1>
+      </Authorization>
+    </ContentLayout>
+  );
+};
+
+export default ProjectsStatisticsRoute;
