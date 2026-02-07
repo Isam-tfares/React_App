@@ -1,6 +1,7 @@
 /* ==================== SIDEBAR BASE STYLES ==================== */
 .sidebar {
-  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  /* background: linear-gradient(180deg, #193e84 0%, #0f172a 100%); */
+  background: #193e84;
   color: #e2e8f0;
   height: 100vh;
   display: flex;
@@ -37,7 +38,7 @@
 .sidebar-logo {
   font-size: 22px;
   font-weight: 700;
-  color: #3b82f6;
+  color: white;
   margin: 0;
   letter-spacing: 1px;
   text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
