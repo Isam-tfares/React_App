@@ -9,16 +9,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f3f4f6;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .auth-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   padding: 40px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
 
 .auth-logo {
@@ -28,20 +28,27 @@
 
 .auth-logo h1 {
   color: #1f2937;
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Dashboard Layout */
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f3f4f6;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
 }
 
 .dashboard-main {
   flex: 1;
-  margin-left: 250px;
-  transition: margin-left 0.3s;
+  margin-left: 280px;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 100vh;
+  padding: 0;
 }
 
 .dashboard-main.sidebar-closed {
@@ -51,24 +58,43 @@
 /* Content Layout */
 .content-layout {
   padding: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .content-header {
   margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
 }
 
 .content-title {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   color: #1f2937;
   margin: 0;
+  background: linear-gradient(135deg, #1f2937 0%, #4b5563 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .content-body {
   background: white;
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  min-height: calc(100vh - 180px);
 }
 
 /* Loading Screen */
@@ -77,4 +103,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
+  
+  .dashboard-main.sidebar-closed {
+    margin-left: 0;
+  }
+  
+  .content-layout {
+    padding: 16px;
+  }
+  
+  .content-body {
+    padding: 20px;
+  }
 }

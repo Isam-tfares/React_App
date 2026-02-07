@@ -3,9 +3,9 @@ import { Authorization } from '../../../../lib/authorization';
 
 const TendersPrepareRoute = () => {
   return (
-    <ContentLayout title="Préparer Appel d'Offres">
+    <ContentLayout title="Préparer">
       <Authorization permission="tenders:edit" forbiddenFallback={<div>Accès refusé.</div>}>
-        <h1>Préparer Appel d'Offres</h1>
+        <h1>Préparer</h1>
       </Authorization>
     </ContentLayout>
   );

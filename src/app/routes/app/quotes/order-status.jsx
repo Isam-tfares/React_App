@@ -5,7 +5,7 @@ const QuotesOrderStatusRoute = () => {
   return (
     <ContentLayout title="Situation BC">
       <Authorization permission="quotes:view" forbiddenFallback={<div>Accès refusé.</div>}>
-        <h1>Situation Bon de Commande</h1>
+        <h1>Situation BC</h1>
       </Authorization>
     </ContentLayout>
   );

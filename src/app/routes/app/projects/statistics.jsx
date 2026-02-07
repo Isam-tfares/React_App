@@ -5,7 +5,7 @@ const ProjectsStatisticsRoute = () => {
   return (
     <ContentLayout title="Statistique Projets">
       <Authorization permission="projects:view" forbiddenFallback={<div>Accès refusé.</div>}>
-        <h1>Statistiques Projets</h1>
+        <h1>Statistique Projets</h1>
       </Authorization>
     </ContentLayout>
   );

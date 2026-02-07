@@ -5,7 +5,7 @@ const TendersQualificationRoute = () => {
   return (
     <ContentLayout title="Qualification AO">
       <Authorization permission="tenders:view" forbiddenFallback={<div>Accès refusé.</div>}>
-        <h1>Qualification Appels d'Offres</h1>
+        <h1>Qualification AO</h1>
       </Authorization>
     </ContentLayout>
   );

@@ -5,7 +5,7 @@ const TendersResultsRoute = () => {
   return (
     <ContentLayout title="Résultat AO">
       <Authorization permission="tenders:view" forbiddenFallback={<div>Accès refusé.</div>}>
-        <h1>Résultat Appels d'Offres</h1>
+        <h1>Résultat AO</h1>
       </Authorization>
     </ContentLayout>
   );

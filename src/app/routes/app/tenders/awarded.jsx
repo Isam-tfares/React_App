@@ -5,7 +5,7 @@ const TendersAwardedRoute = () => {
   return (
     <ContentLayout title="Attribué">
       <Authorization permission="tenders:view" forbiddenFallback={<div>Accès refusé.</div>}>
-        <h1>Appels d'Offres Attribués</h1>
+        <h1>Attribué</h1>
       </Authorization>
     </ContentLayout>
   );
