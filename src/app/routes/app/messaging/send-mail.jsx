@@ -5,7 +5,7 @@ const MessagingSendMailRoute = () => {
   return (
     <ContentLayout title="Envoi courrier">
       <Authorization permission="messaging:send" forbiddenFallback={<div>Accès refusé.</div>}>
-        <h1>Envoi courrier</h1>
+        <h1>Envoi courrier Simo</h1>
       </Authorization>
     </ContentLayout>
   );

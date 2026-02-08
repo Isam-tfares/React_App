@@ -1,19 +1,18 @@
 import { useCallback } from 'react';
 import { useUser } from './auth';
 
-// Define all roles
+// Define all roles (matching your API)
 export const ROLES = {
-  SUPER_ADMIN: 'SUPER_ADMIN',
-  ADMIN: 'ADMIN',
-  DIRECTEUR: 'DIRECTEUR',
-  RESPONSABLE_LABO: 'RESPONSABLE_LABO',
-  TECHNICIEN_LABO: 'TECHNICIEN_LABO',
-  COMMERCIAL: 'COMMERCIAL',
-  COMPTABLE: 'COMPTABLE',
-  RH: 'RH',
-  LOGISTICIEN: 'LOGISTICIEN',
-  EMPLOYEE: 'EMPLOYEE',
-  VIEWER: 'VIEWER',
+  ADMIN: 'admin',
+  DIRECTEUR: 'directeur',
+  RESPONSABLE_LABO: 'responsable_labo',
+  TECHNICIEN_LABO: 'technicien_labo',
+  COMMERCIAL: 'commercial',
+  COMPTABLE: 'comptable',
+  RH: 'rh',
+  LOGISTICIEN: 'logisticien',
+  EMPLOYEE: 'employee',
+  VIEWER: 'viewer',
 };
 
 // Define permissions for each module
@@ -22,114 +21,115 @@ export const PERMISSIONS = {
   'dashboard:view': Object.values(ROLES), // Everyone
 
   // Appels d'Offres (Tenders)
-  'tenders:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'tenders:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'tenders:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'tenders:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR],
+  'tenders:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
+  'tenders:create': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
+  'tenders:edit': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
+  'tenders:delete': [ROLES.ADMIN, ROLES.DIRECTEUR],
 
-  // Marchés (Contracts)
-  'contracts:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'contracts:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR],
-  'contracts:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR],
-  'contracts:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Contracts
+  'contracts:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
+  'contracts:create': [ROLES.ADMIN, ROLES.DIRECTEUR],
+  'contracts:edit': [ROLES.ADMIN, ROLES.DIRECTEUR],
+  'contracts:delete': [ROLES.ADMIN],
 
-  // Devis (Quotes)
-  'quotes:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL, ROLES.RESPONSABLE_LABO],
-  'quotes:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'quotes:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'quotes:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR],
+  // Quotes
+  'quotes:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL, ROLES.RESPONSABLE_LABO],
+  'quotes:create': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
+  'quotes:edit': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
+  'quotes:delete': [ROLES.ADMIN, ROLES.DIRECTEUR],
 
-  // Projets (Projects)
-  'projects:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO, ROLES.COMMERCIAL],
-  'projects:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO],
-  'projects:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO],
-  'projects:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR],
+  // Projects
+  'projects:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO, ROLES.COMMERCIAL],
+  'projects:create': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO],
+  'projects:edit': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO],
+  'projects:delete': [ROLES.ADMIN, ROLES.DIRECTEUR],
 
-  // Réceptions (Lab Testing/Reception)
-  'receptions:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'receptions:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'receptions:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'receptions:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
+  // Receptions
+  'receptions:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
+  'receptions:create': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
+  'receptions:edit': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
+  'receptions:delete': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
 
-  // Rapports (Reports)
-  'reports:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'reports:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'reports:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
-  'reports:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Reports
+  'reports:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
+  'reports:create': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
+  'reports:edit': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
+  'reports:delete': [ROLES.ADMIN],
 
-  // Facturation (Invoicing)
-  'invoicing:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
-  'invoicing:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMPTABLE],
-  'invoicing:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMPTABLE],
-  'invoicing:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Invoicing
+  'invoicing:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
+  'invoicing:create': [ROLES.ADMIN, ROLES.COMPTABLE],
+  'invoicing:edit': [ROLES.ADMIN, ROLES.COMPTABLE],
+  'invoicing:delete': [ROLES.ADMIN],
 
-  // Règlements Clients (Client Payments)
-  'clientPayments:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
-  'clientPayments:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMPTABLE],
-  'clientPayments:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMPTABLE],
-  'clientPayments:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Client Payments
+  'clientPayments:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
+  'clientPayments:create': [ROLES.ADMIN, ROLES.COMPTABLE],
+  'clientPayments:edit': [ROLES.ADMIN, ROLES.COMPTABLE],
+  'clientPayments:delete': [ROLES.ADMIN],
 
-  // Bordereaux (Delivery Notes)
-  'deliveryNotes:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.COMPTABLE],
-  'deliveryNotes:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
-  'deliveryNotes:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
+  // Delivery Notes
+  'deliveryNotes:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.COMPTABLE],
+  'deliveryNotes:create': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
+  'deliveryNotes:edit': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
 
-  // Achats (Purchases)
-  'purchases:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
-  'purchases:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMPTABLE],
-  'purchases:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMPTABLE],
-  'purchases:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Purchases
+  'purchases:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
+  'purchases:create': [ROLES.ADMIN, ROLES.COMPTABLE],
+  'purchases:edit': [ROLES.ADMIN, ROLES.COMPTABLE],
+  'purchases:delete': [ROLES.ADMIN],
 
-  // Personnel (HR)
-  'personnel:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RH],
-  'personnel:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RH],
-  'personnel:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.RH],
-  'personnel:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Personnel
+  'personnel:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RH],
+  'personnel:create': [ROLES.ADMIN, ROLES.RH],
+  'personnel:edit': [ROLES.ADMIN, ROLES.RH],
+  'personnel:delete': [ROLES.ADMIN],
 
-  // Trésorerie (Treasury)
-  'treasury:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
-  'treasury:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMPTABLE],
-  'treasury:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMPTABLE],
+  // Treasury
+  'treasury:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
+  'treasury:create': [ROLES.ADMIN, ROLES.COMPTABLE],
+  'treasury:edit': [ROLES.ADMIN, ROLES.COMPTABLE],
 
-  // Logistique (Logistics)
-  'logistics:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.LOGISTICIEN],
-  'logistics:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.LOGISTICIEN],
-  'logistics:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.LOGISTICIEN],
-  'logistics:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Logistics
+  'logistics:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.LOGISTICIEN],
+  'logistics:create': [ROLES.ADMIN, ROLES.LOGISTICIEN],
+  'logistics:edit': [ROLES.ADMIN, ROLES.LOGISTICIEN],
+  'logistics:delete': [ROLES.ADMIN],
 
   // Clients
-  'clients:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL, ROLES.COMPTABLE],
-  'clients:create': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMMERCIAL],
-  'clients:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.COMMERCIAL],
-  'clients:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  'clients:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL, ROLES.COMPTABLE],
+  'clients:create': [ROLES.ADMIN, ROLES.COMMERCIAL],
+  'clients:edit': [ROLES.ADMIN, ROLES.COMMERCIAL],
+  'clients:delete': [ROLES.ADMIN],
 
-  // Messagerie (Messaging)
-  'messaging:view': Object.values(ROLES), // Everyone can view messages
+  // Messaging
+  'messaging:view': Object.values(ROLES),
   'messaging:send': Object.values(ROLES).filter(r => r !== ROLES.VIEWER),
 
-  // G.E.D (Document Management)
+  // Documents
   'documents:view': Object.values(ROLES),
   'documents:upload': Object.values(ROLES).filter(r => r !== ROLES.VIEWER),
-  'documents:delete': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR],
+  'documents:delete': [ROLES.ADMIN, ROLES.DIRECTEUR],
 
-  // Paramétrage (Settings)
-  'settings:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.DIRECTEUR],
-  'settings:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Settings
+  'settings:view': [ROLES.ADMIN, ROLES.DIRECTEUR],
+  'settings:edit': [ROLES.ADMIN],
 
-  // Droits (Rights)
-  'rights:view': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
-  'rights:edit': [ROLES.SUPER_ADMIN, ROLES.ADMIN],
+  // Rights
+  'rights:view': [ROLES.ADMIN],
+  'rights:edit': [ROLES.ADMIN],
 };
 
-// Hook to check authorization
 export const useAuthorization = () => {
   const { data: user } = useUser();
 
   const checkAccess = useCallback(
     ({ allowedRoles }) => {
       if (!user) return false;
+      // Get role from user_info (role_name from API)
+      const userRole = user.role_name;
       if (allowedRoles && allowedRoles.length > 0) {
-        return allowedRoles.includes(user.role);
+        return allowedRoles.includes(userRole);
       }
       return true;
     },
@@ -139,9 +139,10 @@ export const useAuthorization = () => {
   const checkPermission = useCallback(
     (permission) => {
       if (!user) return false;
+      const userRole = user.role_name;
       const allowedRoles = PERMISSIONS[permission];
       if (!allowedRoles) return false;
-      return allowedRoles.includes(user.role);
+      return allowedRoles.includes(userRole);
     },
     [user]
   );
@@ -149,12 +150,11 @@ export const useAuthorization = () => {
   return { 
     checkAccess, 
     checkPermission, 
-    role: user?.role,
+    role: user?.role_name,
     user 
   };
 };
 
-// Authorization component
 export const Authorization = ({
   permission,
   allowedRoles,

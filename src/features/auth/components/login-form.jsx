@@ -1,21 +1,26 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../lib/auth';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
 import { paths } from '../../../config/paths';
-import './auth-forms.css';
 
 export const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
-  const { login } = useAuth();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo');
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+    setError(''); // Clear error when user types
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,49 +28,105 @@ export const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      await login({ email, password });
-      navigate(redirectTo || paths.app.dashboard.path, { replace: true });
+      await login(formData);
+      navigate(paths.app.dashboard.path);
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="auth-form">
-      <h2 className="form-title">Sign In</h2>
+    <div className="login-form">
+      <h2 style={{ marginBottom: '24px', textAlign: 'center' }}>Se connecter</h2>
       
-      {error && <div className="form-error">{error}</div>}
-      
-      <Input
-        label="Email"
-        type="email"
-        name="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter your email"
-        required
-      />
-      
-      <Input
-        label="Password"
-        type="password"
-        name="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Enter your password"
-        required
-      />
-      
-      <Button type="submit" isLoading={isLoading} className="submit-btn">
-        Sign In
-      </Button>
-      
-      <p className="form-footer">
-        Don't have an account?{' '}
-        <a href={paths.auth.register.path}>Register here</a>
-      </p>
-    </form>
+      {error && (
+        <div style={{
+          padding: '12px',
+          marginBottom: '16px',
+          backgroundColor: '#fee',
+          color: '#c33',
+          borderRadius: '6px',
+          fontSize: '14px',
+        }}>
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '16px' }}>
+          <label htmlFor="username" style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+            Nom d'utilisateur
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="Entrez votre nom d'utilisateur"
+            required
+            disabled={isLoading}
+            style={{
+              width: '100%',
+              padding: '10px 12px',
+              border: '1px solid #ddd',
+              borderRadius: '6px',
+              fontSize: '14px',
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label htmlFor="password" style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+            Mot de passe
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Entrez votre mot de passe"
+            required
+            disabled={isLoading}
+            style={{
+              width: '100%',
+              padding: '10px 12px',
+              border: '1px solid #ddd',
+              borderRadius: '6px',
+              fontSize: '14px',
+            }}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          style={{
+            width: '100%',
+            padding: '12px',
+            backgroundColor: '#193e84',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: isLoading ? 'not-allowed' : 'pointer',
+            opacity: isLoading ? 0.7 : 1,
+          }}
+        >
+          {isLoading ? 'Connexion...' : 'Se connecter'}
+        </button>
+      </form>
+
+      <div style={{ marginTop: '16px', textAlign: 'center', fontSize: '14px', color: '#666' }}>
+        <p>Utilisateurs de test:</p>
+        <p style={{ fontSize: '12px', marginTop: '8px' }}>
+          <strong>admin</strong> / password123
+        </p>
+      </div>
+    </div>
   );
 };

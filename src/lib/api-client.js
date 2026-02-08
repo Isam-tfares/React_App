@@ -1,14 +1,12 @@
-import axios from 'axios';
+import Axios from 'axios';
 import { env } from '../config/env';
 
-const api = axios.create({
+// Create axios instance with base URL
+export const api = Axios.create({
   baseURL: env.API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
-// Request interceptor - add auth token
+// Request interceptor - Add token to all requests
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -17,23 +15,26 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
-);
-
-// Response interceptor - handle errors
-api.interceptors.response.use(
-  (response) => response.data,
   (error) => {
-    const message = error.response?.data?.message || error.message;
-    
-    // Handle 401 Unauthorized
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/auth/login';
-    }
-
-    return Promise.reject(new Error(message));
+    return Promise.reject(error);
   }
 );
 
-export { api };
+// Response interceptor - Handle errors globally
+api.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
+    const message = error.response?.data?.detail || error.message || 'Something went wrong';
+    
+    // Handle 401 - Unauthorized (token expired or invalid)
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/auth/login';
+    }
+    
+    return Promise.reject(new Error(message));
+  }
+);

@@ -318,9 +318,9 @@ export const Sidebar = ({ isOpen, onToggle, user, onLogout }) => {
         {isOpen && user && (
           <div className="user-info">
             <span className="user-name">
-              {user.firstName} {user.lastName}
+              {user.firstName} {user.full_name}
             </span>
-            <span className="user-role">{user.role}</span>
+            <span className="user-role">{user.role_name}</span>
           </div>
         )}
         <button className="logout-btn" onClick={onLogout}>
