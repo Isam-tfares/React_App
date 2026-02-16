@@ -320,7 +320,7 @@ export const Sidebar = ({ isOpen, onToggle, user, onLogout }) => {
             <span className="user-name">
               {user.firstName} {user.full_name}
             </span>
-            <span className="user-role">{user.role_name}</span>
+            <span className="user-role">{user.lib_fonction_person}</span>
           </div>
         )}
         <button className="logout-btn" onClick={onLogout}>

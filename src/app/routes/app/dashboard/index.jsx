@@ -25,7 +25,7 @@ const DashboardRoute = () => {
             </div>
             <div className="user-info">
               <div className="user-name">{user?.full_name || user?.username}</div>
-              <div className="user-role">{user?.role_name}</div>
+              <div className="user-role">{user?.lib_fonction_person}</div>
               <div className="user-email">{user?.email}</div>
             </div>
           </div>
