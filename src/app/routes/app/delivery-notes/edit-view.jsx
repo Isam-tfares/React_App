@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const DeliveryNotesEditViewRoute = () => {
   return (
     <ContentLayout title="Modification/Edition">
-      <Authorization permission="deliveryNotes:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Creation" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Modification/Edition</h1>
       </Authorization>
     </ContentLayout>

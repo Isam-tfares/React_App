@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const RightsAdminMenuRoute = () => {
   return (
     <ContentLayout title="Menu Administrateur">
-      <Authorization permission="rights:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Mnu" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Menu Administrateur</h1>
       </Authorization>
     </ContentLayout>

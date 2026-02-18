@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ClientsUpdateRoute = () => {
   return (
     <ContentLayout title="Mise à jours">
-      <Authorization permission="clients:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Mise_à_jours" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Mise à jours</h1>
       </Authorization>
     </ContentLayout>

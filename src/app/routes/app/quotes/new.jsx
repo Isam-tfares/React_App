@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const QuotesNewRoute = () => {
   return (
     <ContentLayout title="Nouveau Devis">
-      <Authorization permission="quotes:create" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Nouveau_devis1" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Nouveau Devis</h1>
       </Authorization>
     </ContentLayout>

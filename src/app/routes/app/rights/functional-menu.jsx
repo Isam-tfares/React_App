@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const RightsFunctionalMenuRoute = () => {
   return (
     <ContentLayout title="Menu Fonctionnelle">
-      <Authorization permission="rights:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Menu_Fonctionnelle" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Menu Fonctionnelle</h1>
       </Authorization>
     </ContentLayout>

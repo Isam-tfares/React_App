@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const PersonnelLeaveRightsRoute = () => {
   return (
     <ContentLayout title="Droit congé">
-      <Authorization permission="personnel:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Droit_congé" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Droit congé</h1>
       </Authorization>
     </ContentLayout>

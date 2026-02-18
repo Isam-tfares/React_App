@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ProjectsGeolocationRoute = () => {
   return (
     <ContentLayout title="Géolocalisation">
-      <Authorization permission="projects:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="tableau_de_bord" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Géolocalisation</h1>
       </Authorization>
     </ContentLayout>

@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const QuotesDetailsRoute = () => {
   return (
     <ContentLayout title="Détails devis">
-      <Authorization permission="quotes:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="etatdevis" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Détails devis</h1>
       </Authorization>
     </ContentLayout>

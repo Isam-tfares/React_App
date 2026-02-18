@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const SettingsProfessionRoute = () => {
   return (
     <ContentLayout title="Paramétrage Métier">
-      <Authorization permission="settings:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Initiation_Table" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Paramétrage Métier</h1>
       </Authorization>
     </ContentLayout>

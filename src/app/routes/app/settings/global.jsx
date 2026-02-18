@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const SettingsGlobalRoute = () => {
   return (
     <ContentLayout title="Paramétrage Global">
-      <Authorization permission="settings:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Global1" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Paramétrage Global</h1>
       </Authorization>
     </ContentLayout>

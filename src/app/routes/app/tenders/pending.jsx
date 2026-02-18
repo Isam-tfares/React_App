@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const TendersPendingRoute = () => {
   return (
     <ContentLayout title="En attente résultat">
-      <Authorization permission="tenders:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="En_attente_résultat" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>En attente résultat</h1>
       </Authorization>
     </ContentLayout>

@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const TendersStatisticsRoute = () => {
   return (
     <ContentLayout title="Statistique AO">
-      <Authorization permission="tenders:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Statistique_Ao" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Statistique AO</h1>
       </Authorization>
     </ContentLayout>

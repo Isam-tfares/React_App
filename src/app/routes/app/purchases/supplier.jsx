@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const PurchasesSupplierRoute = () => {
   return (
     <ContentLayout title="Fournisseur">
-      <Authorization permission="purchases:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="OPT_Fournisseur" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Fournisseur</h1>
       </Authorization>
     </ContentLayout>

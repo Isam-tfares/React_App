@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const TreasuryHqCashRoute = () => {
   return (
     <ContentLayout title="Caisse siège">
-      <Authorization permission="treasury:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Caisse_siège" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Caisse siège</h1>
       </Authorization>
     </ContentLayout>

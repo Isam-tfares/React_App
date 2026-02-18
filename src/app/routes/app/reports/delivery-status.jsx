@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ReportsDeliveryStatusRoute = () => {
   return (
     <ContentLayout title="État livraison rapports">
-      <Authorization permission="reports:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Etat_livraison_rapports" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>État livraison rapports</h1>
       </Authorization>
     </ContentLayout>

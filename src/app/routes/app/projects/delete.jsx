@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ProjectsDeleteRoute = () => {
   return (
     <ContentLayout title="Supprimer Projet">
-      <Authorization permission="projects:delete" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Supprimer1" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Supprimer Projet</h1>
       </Authorization>
     </ContentLayout>

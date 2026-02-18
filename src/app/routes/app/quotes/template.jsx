@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const QuotesTemplateRoute = () => {
   return (
     <ContentLayout title="Paramétrage modèle">
-      <Authorization permission="quotes:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="BTN_Modifier_devis" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Paramétrage modèle</h1>
       </Authorization>
     </ContentLayout>

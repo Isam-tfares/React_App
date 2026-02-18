@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ClientPaymentsViewRoute = () => {
   return (
     <ContentLayout title="Consulter Règlements">
-      <Authorization permission="clientPayments:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Consulter_rg_clt" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Consulter Règlements</h1>
       </Authorization>
     </ContentLayout>

@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ReceptionsConcreteTestRoute = () => {
   return (
     <ContentLayout title="Essai Béton">
-      <Authorization permission="receptions:create" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Essai_Beton" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Essai Béton</h1>
       </Authorization>
     </ContentLayout>

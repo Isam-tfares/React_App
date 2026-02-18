@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const DocumentsScanRoute = () => {
   return (
     <ContentLayout title="Scanner document">
-      <Authorization permission="documents:upload" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Scanner_document_papier" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Scanner document</h1>
       </Authorization>
     </ContentLayout>

@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const DocumentsDeleteRoute = () => {
   return (
     <ContentLayout title="Supprimer document">
-      <Authorization permission="documents:delete" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Supprimer_document" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Supprimer document</h1>
       </Authorization>
     </ContentLayout>

@@ -1,176 +1,122 @@
 import { useCallback } from 'react';
 import { useUser } from './auth';
+import { TACHE_ROUTE_MAP } from '../config/taches-routes-map';
 
-// Define all roles (matching your API)
-export const ROLES = {
-  ADMIN: 'admin',
-  DIRECTEUR: 'directeur',
-  RESPONSABLE_LABO: 'responsable_labo',
-  TECHNICIEN_LABO: 'technicien_labo',
-  COMMERCIAL: 'commercial',
-  COMPTABLE: 'comptable',
-  RH: 'rh',
-  LOGISTICIEN: 'logisticien',
-  EMPLOYEE: 'employee',
-  VIEWER: 'viewer',
+/**
+ * Build a Set of allowed nom_tache from user's taches array
+ */
+const getUserTacheNames = (user) => {
+  if (!user?.taches || !Array.isArray(user.taches)) return new Set();
+  return new Set(user.taches.map(t => t.nom_tache));
 };
 
-// Define permissions for each module
-export const PERMISSIONS = {
-  // Dashboard
-  'dashboard:view': Object.values(ROLES), // Everyone
+/**
+ * Build a Set of allowed modules from user's taches
+ */
+const getUserModules = (user) => {
+  if (!user?.taches || !Array.isArray(user.taches)) return new Set();
+  return new Set(user.taches.map(t => t.module));
+};
 
-  // Appels d'Offres (Tenders)
-  'tenders:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'tenders:create': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'tenders:edit': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'tenders:delete': [ROLES.ADMIN, ROLES.DIRECTEUR],
-
-  // Contracts
-  'contracts:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'contracts:create': [ROLES.ADMIN, ROLES.DIRECTEUR],
-  'contracts:edit': [ROLES.ADMIN, ROLES.DIRECTEUR],
-  'contracts:delete': [ROLES.ADMIN],
-
-  // Quotes
-  'quotes:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL, ROLES.RESPONSABLE_LABO],
-  'quotes:create': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'quotes:edit': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL],
-  'quotes:delete': [ROLES.ADMIN, ROLES.DIRECTEUR],
-
-  // Projects
-  'projects:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO, ROLES.COMMERCIAL],
-  'projects:create': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO],
-  'projects:edit': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO],
-  'projects:delete': [ROLES.ADMIN, ROLES.DIRECTEUR],
-
-  // Receptions
-  'receptions:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'receptions:create': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'receptions:edit': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'receptions:delete': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
-
-  // Reports
-  'reports:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'reports:create': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO, ROLES.TECHNICIEN_LABO],
-  'reports:edit': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
-  'reports:delete': [ROLES.ADMIN],
-
-  // Invoicing
-  'invoicing:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
-  'invoicing:create': [ROLES.ADMIN, ROLES.COMPTABLE],
-  'invoicing:edit': [ROLES.ADMIN, ROLES.COMPTABLE],
-  'invoicing:delete': [ROLES.ADMIN],
-
-  // Client Payments
-  'clientPayments:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
-  'clientPayments:create': [ROLES.ADMIN, ROLES.COMPTABLE],
-  'clientPayments:edit': [ROLES.ADMIN, ROLES.COMPTABLE],
-  'clientPayments:delete': [ROLES.ADMIN],
-
-  // Delivery Notes
-  'deliveryNotes:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RESPONSABLE_LABO, ROLES.COMPTABLE],
-  'deliveryNotes:create': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
-  'deliveryNotes:edit': [ROLES.ADMIN, ROLES.RESPONSABLE_LABO],
-
-  // Purchases
-  'purchases:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
-  'purchases:create': [ROLES.ADMIN, ROLES.COMPTABLE],
-  'purchases:edit': [ROLES.ADMIN, ROLES.COMPTABLE],
-  'purchases:delete': [ROLES.ADMIN],
-
-  // Personnel
-  'personnel:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.RH],
-  'personnel:create': [ROLES.ADMIN, ROLES.RH],
-  'personnel:edit': [ROLES.ADMIN, ROLES.RH],
-  'personnel:delete': [ROLES.ADMIN],
-
-  // Treasury
-  'treasury:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMPTABLE],
-  'treasury:create': [ROLES.ADMIN, ROLES.COMPTABLE],
-  'treasury:edit': [ROLES.ADMIN, ROLES.COMPTABLE],
-
-  // Logistics
-  'logistics:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.LOGISTICIEN],
-  'logistics:create': [ROLES.ADMIN, ROLES.LOGISTICIEN],
-  'logistics:edit': [ROLES.ADMIN, ROLES.LOGISTICIEN],
-  'logistics:delete': [ROLES.ADMIN],
-
-  // Clients
-  'clients:view': [ROLES.ADMIN, ROLES.DIRECTEUR, ROLES.COMMERCIAL, ROLES.COMPTABLE],
-  'clients:create': [ROLES.ADMIN, ROLES.COMMERCIAL],
-  'clients:edit': [ROLES.ADMIN, ROLES.COMMERCIAL],
-  'clients:delete': [ROLES.ADMIN],
-
-  // Messaging
-  'messaging:view': Object.values(ROLES),
-  'messaging:send': Object.values(ROLES).filter(r => r !== ROLES.VIEWER),
-
-  // Documents
-  'documents:view': Object.values(ROLES),
-  'documents:upload': Object.values(ROLES).filter(r => r !== ROLES.VIEWER),
-  'documents:delete': [ROLES.ADMIN, ROLES.DIRECTEUR],
-
-  // Settings
-  'settings:view': [ROLES.ADMIN, ROLES.DIRECTEUR],
-  'settings:edit': [ROLES.ADMIN],
-
-  // Rights
-  'rights:view': [ROLES.ADMIN],
-  'rights:edit': [ROLES.ADMIN],
+/**
+ * Build a Set of allowed paths from user's taches
+ */
+const getUserAllowedPaths = (user) => {
+  const tacheNames = getUserTacheNames(user);
+  const allowedPaths = new Set();
+  
+  for (const nomTache of tacheNames) {
+    const mapping = TACHE_ROUTE_MAP[nomTache];
+    if (mapping?.path) {
+      allowedPaths.add(mapping.path);
+    }
+  }
+  
+  return allowedPaths;
 };
 
 export const useAuthorization = () => {
   const { data: user } = useUser();
 
-  const checkAccess = useCallback(
-    ({ allowedRoles }) => {
-      if (!user) return false;
-      // Get role from user_info (role_name from API)
-      const userRole = user.role_name;
-      if (allowedRoles && allowedRoles.length > 0) {
-        return allowedRoles.includes(userRole);
-      }
-      return true;
+  /**
+   * Check if user has a specific tache by nom_tache
+   */
+  const hasTache = useCallback(
+    (nomTache) => {
+      if (!user?.taches) return false;
+      return user.taches.some(t => t.nom_tache === nomTache);
     },
     [user]
   );
 
-  const checkPermission = useCallback(
-    (permission) => {
-      if (!user) return false;
-      const userRole = user.role_name;
-      const allowedRoles = PERMISSIONS[permission];
-      if (!allowedRoles) return false;
-      return allowedRoles.includes(userRole);
+  /**
+   * Check if user has ANY tache in a given module
+   * (used for showing/hiding parent menu sections)
+   */
+  const hasModuleAccess = useCallback(
+    (moduleName) => {
+      if (!user?.taches) return false;
+      return user.taches.some(t => t.module === moduleName);
     },
     [user]
   );
 
-  return { 
-    checkAccess, 
-    checkPermission, 
-    role: user?.role_name,
-    user 
+  /**
+   * Check if user can access a specific route path
+   */
+  const canAccessPath = useCallback(
+    (path) => {
+      if (!user?.taches) return false;
+      const allowedPaths = getUserAllowedPaths(user);
+      return allowedPaths.has(path);
+    },
+    [user]
+  );
+
+  /**
+   * Get all route paths the user is allowed to access
+   */
+  const getAllowedPaths = useCallback(() => {
+    return getUserAllowedPaths(user);
+  }, [user]);
+
+  /**
+   * Get all module names the user has access to
+   */
+  const getAllowedModules = useCallback(() => {
+    return getUserModules(user);
+  }, [user]);
+
+  return {
+    hasTache,
+    hasModuleAccess,
+    canAccessPath,
+    getAllowedPaths,
+    getAllowedModules,
+    user,
   };
 };
 
+/**
+ * Component that conditionally renders children based on tache access
+ */
 export const Authorization = ({
-  permission,
-  allowedRoles,
+  tache,          // Check specific nom_tache
+  module,         // Check any tache in module  
+  path,           // Check specific route path
   forbiddenFallback = null,
   children,
 }) => {
-  const { checkAccess, checkPermission } = useAuthorization();
+  const { hasTache, hasModuleAccess, canAccessPath } = useAuthorization();
 
   let canAccess = false;
 
-  if (allowedRoles) {
-    canAccess = checkAccess({ allowedRoles });
-  }
-
-  if (permission) {
-    canAccess = checkPermission(permission);
+  if (tache) {
+    canAccess = hasTache(tache);
+  } else if (module) {
+    canAccess = hasModuleAccess(module);
+  } else if (path) {
+    canAccess = canAccessPath(path);
   }
 
   return canAccess ? children : forbiddenFallback;

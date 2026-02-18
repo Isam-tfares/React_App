@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const MessagingInternalRoute = () => {
   return (
     <ContentLayout title="Message interne">
-      <Authorization permission="messaging:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Message" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Message interne</h1>
       </Authorization>
     </ContentLayout>

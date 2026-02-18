@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ReceptionsPlanningRoute = () => {
   return (
     <ContentLayout title="Planning">
-      <Authorization permission="receptions:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Liste_reception_pour_Analyse" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Planning</h1>
       </Authorization>
     </ContentLayout>

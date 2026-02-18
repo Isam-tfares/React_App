@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const TreasuryBranchCashRoute = () => {
   return (
     <ContentLayout title="Caisse agence">
-      <Authorization permission="treasury:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Caisse_agence" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Caisse agence</h1>
       </Authorization>
     </ContentLayout>

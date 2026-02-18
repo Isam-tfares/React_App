@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const SettingsCompanyRoute = () => {
   return (
     <ContentLayout title="Paramétrage Société">
-      <Authorization permission="settings:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Société" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Paramétrage Société</h1>
       </Authorization>
     </ContentLayout>

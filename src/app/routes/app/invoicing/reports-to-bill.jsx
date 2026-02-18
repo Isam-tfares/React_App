@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const InvoicingReportsToBillRoute = () => {
   return (
     <ContentLayout title="Rapport à facturer">
-      <Authorization permission="invoicing:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Rapport_à_facturer" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Rapport à facturer</h1>
       </Authorization>
     </ContentLayout>

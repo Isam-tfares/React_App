@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const MessagingAppRemarkRoute = () => {
   return (
     <ContentLayout title="Remarque application">
-      <Authorization permission="messaging:send" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Demande_annulation" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Remarque application</h1>
       </Authorization>
     </ContentLayout>

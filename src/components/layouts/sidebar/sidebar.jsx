@@ -1,252 +1,295 @@
 import { NavLink } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuthorization } from '../../../lib/authorization';
-import { paths } from '../../../config/paths';
+import { TACHE_ROUTE_MAP } from '../../../config/taches-routes-map';
 import './sidebar.css';
 
-// Navigation items with sub-menus
-const navItems = [
+/**
+ * Define the sidebar menu structure.
+ * Each item has a `module` key that maps to the taches module name,
+ * and subItems have a `tache` key matching the `nom_tache` from the DB.
+ */
+const menuStructure = [
   {
     name: 'Dashboard',
-    path: paths.app.dashboard.path,
     icon: '📊',
-    permission: 'dashboard:view',
+    module: null, // Always visible for authenticated users
+    path: '/app/dashboard',
   },
   {
-    name: 'Appels d\'Offres',
+    name: "Appels d'Offres",
     icon: '📋',
-    permission: 'tenders:view',
+    module: 'AO',
     subItems: [
-      { name: 'Nouveau', path: paths.app.tenders.new.path },
-      { name: 'Consulter', path: paths.app.tenders.view.path },
-      { name: 'Accord Participation', path: paths.app.tenders.participation.path },
-      { name: 'Préparer', path: paths.app.tenders.prepare.path },
-      { name: 'En attente résultat', path: paths.app.tenders.pending.path },
-      { name: 'Attribué', path: paths.app.tenders.awarded.path },
-      { name: 'Marché', path: paths.app.tenders.contract.path },
-      { name: 'Situation caution', path: paths.app.tenders.guaranteeStatus.path },
-      { name: 'M.à.j Caution', path: paths.app.tenders.updateGuarantee.path },
-      { name: 'Caution à récupérer', path: paths.app.tenders.recoverGuarantee.path },
-      { name: 'Résultat AO', path: paths.app.tenders.results.path },
-      { name: 'Consultation Globale', path: paths.app.tenders.global.path },
-      { name: 'Statistique AO', path: paths.app.tenders.statistics.path },
-      { name: 'Qualification AO', path: paths.app.tenders.qualification.path },
+      { tache: 'AO_Créer', name: 'Nouveau' },
+      { tache: 'Nouveau_AO', name: 'Consulter' },
+      { tache: 'Avis_de_participation', name: 'Accord Participation' },
+      { tache: 'Préparation_AO', name: 'Préparer' },
+      { tache: 'En_attente_résultat', name: 'En attente résultat' },
+      { tache: 'Attribué', name: 'Attribué' },
+      { tache: 'Situation_caution', name: 'Situation caution' },
+      { tache: 'Maj_Caution', name: 'M.à.j Caution' },
+      { tache: 'Caution_à_recupere', name: 'Caution à récupérer' },
+      { tache: 'Consultation_Globale', name: 'Consultation Globale' },
+      { tache: 'Statistique_Ao', name: 'Statistique AO' },
+      { tache: 'BTN_Nouveau_qualif', name: 'Qualification AO' },
     ],
   },
   {
     name: 'Marchés',
     icon: '📜',
-    permission: 'contracts:view',
+    module: 'MARCHE',
     subItems: [
-      { name: 'Nouveau', path: paths.app.contracts.new.path },
-      { name: 'Consulter Marché', path: paths.app.contracts.view.path },
-      { name: 'Caution définitive', path: paths.app.contracts.finalGuarantee.path },
+      { tache: 'Nouveau2', name: 'Nouveau' },
+      { tache: 'Consulter', name: 'Consulter Marché' },
+      { tache: 'Caution_définitive', name: 'Caution définitive' },
     ],
   },
   {
     name: 'Devis',
     icon: '💰',
-    permission: 'quotes:view',
+    module: 'DEVIS',
     subItems: [
-      { name: 'Nouveau', path: paths.app.quotes.new.path },
-      { name: 'Consulter', path: paths.app.quotes.view.path },
-      { name: 'Situation BC', path: paths.app.quotes.orderStatus.path },
-      { name: 'Référentiel des prix', path: paths.app.quotes.priceRef.path },
-      { name: 'Détails devis', path: paths.app.quotes.details.path },
-      { name: 'Paramétrage modèle', path: paths.app.quotes.template.path },
+      { tache: 'Nouveau_devis1', name: 'Nouveau' },
+      { tache: 'Bon_de_commande', name: 'Consulter' },
+      { tache: 'Situation_BC', name: 'Situation BC' },
+      { tache: 'Referenciel_Prix', name: 'Référentiel des prix' },
     ],
   },
   {
     name: 'Projets',
     icon: '🏗️',
-    permission: 'projects:view',
+    module: 'PROJETS',
     subItems: [
-      { name: 'Nouveau', path: paths.app.projects.new.path },
-      { name: 'Modifier', path: paths.app.projects.edit.path },
-      { name: 'Consulter', path: paths.app.projects.view.path },
-      { name: 'Supprimer', path: paths.app.projects.delete.path },
-      { name: 'Sous projet', path: paths.app.projects.subProject.path },
-      { name: 'Statistique', path: paths.app.projects.statistics.path },
-      { name: 'Situation projets', path: paths.app.projects.status.path },
-      { name: 'Géolocalisation', path: paths.app.projects.geolocation.path },
-      { name: 'Changement des affectations', path: paths.app.projects.assignments.path },
+      { tache: 'Nouveau3', name: 'Nouveau' },
+      { tache: 'Modifier1', name: 'Modifier' },
+      { tache: 'Suivi_projet', name: 'Consulter' },
+      { tache: 'Supprimer1', name: 'Supprimer' },
+      { tache: 'Sous_projet', name: 'Sous projet' },
+      { tache: 'Statistique', name: 'Statistique' },
+      { tache: 'Situation_projets', name: 'Situation projets' },
     ],
   },
   {
     name: 'Réceptions',
     icon: '🔬',
-    permission: 'receptions:view',
+    module: 'RECEPTION',
     subItems: [
-      { name: 'Nouveau', path: paths.app.receptions.new.path },
-      { name: 'Nouvelle Réception (Traction)', path: paths.app.receptions.newTraction.path },
-      { name: 'Pré Réception', path: paths.app.receptions.preReception.path },
-      { name: 'Nouvelle réception étude', path: paths.app.receptions.newStudy.path },
-      { name: 'Essai autre matériaux', path: paths.app.receptions.otherMaterialTest.path },
-      { name: 'Essai Béton', path: paths.app.receptions.concreteTest.path },
-      { name: 'Gestion cylindre', path: paths.app.receptions.cylinderManagement.path },
-      { name: 'Modifier réception', path: paths.app.receptions.edit.path },
-      { name: 'Planning', path: paths.app.receptions.planning.path },
+      { tache: 'Nouveau5', name: 'Nouveau' },
+      { tache: 'Essai_autre_materiaux', name: 'Essai autre matériaux' },
+      { tache: 'Essai_Beton', name: 'Essai Béton' },
+      { tache: 'Gestion_cylindre', name: 'Gestion cylindre' },
+      { tache: 'Modifier_test', name: 'Modifier réception' },
+      { tache: 'Suivi_Reception', name: 'Suivi autre matériaux' },
+      { tache: 'Essai_beton_LABO', name: 'Essai béton (LABO)' },
+      { tache: 'Connsultation_essai_Interne_Exetrne', name: 'Consultation essai' },
+      { tache: 'Traitement_des_essais_Labo', name: 'Traitement essais Labo' },
+      { tache: 'Initialisation', name: 'Initialisation' },
+      { tache: 'Liste_reception_pour_Analyse', name: 'Planning' },
     ],
   },
   {
     name: 'Rapports',
     icon: '📄',
-    permission: 'reports:view',
+    module: 'RAPPORTS',
     subItems: [
-      { name: 'À faire : Autres Matériaux', path: paths.app.reports.todoOtherMaterials.path },
-      { name: 'À faire : Béton', path: paths.app.reports.todoConcrete.path },
-      { name: 'À faire Global', path: paths.app.reports.todoGlobal.path },
-      { name: 'Modifier', path: paths.app.reports.edit.path },
-      { name: 'Consulter Rapport/Prix', path: paths.app.reports.viewPrice.path },
-      { name: 'Rapport de synthèse', path: paths.app.reports.synthesis.path },
-      { name: 'État livraison rapports', path: paths.app.reports.deliveryStatus.path },
-      { name: 'Édition Rapport', path: paths.app.reports.edition.path },
-      { name: 'Rapport d\'étude', path: paths.app.reports.study.path },
+      { tache: 'Autre_Matériaux', name: 'À faire : Autres Matériaux' },
+      { tache: 'Béton2', name: 'À faire : Béton' },
+      { tache: 'Modifier2', name: 'Modifier' },
+      { tache: 'Consulter3', name: 'Consulter Rapport/Prix' },
+      { tache: 'Etat_livraison_rapports', name: 'État livraison rapports' },
+      { tache: 'Edition_Rapport', name: 'Édition Rapport' },
+      { tache: 'Rapport_d_étude', name: "Rapport d'étude" },
     ],
   },
   {
     name: 'Facturation',
     icon: '💳',
-    permission: 'invoicing:view',
+    module: 'FACTURATION',
     subItems: [
-      { name: 'Nouvelle facture', path: paths.app.invoicing.new.path },
-      { name: 'Rapport à facturer', path: paths.app.invoicing.reportsToBill.path },
-      { name: 'Création', path: paths.app.invoicing.create.path },
-      { name: 'Consultation/Edition Factures', path: paths.app.invoicing.viewEdit.path },
-      { name: 'Pré-facture (BL)', path: paths.app.invoicing.preInvoice.path },
-      { name: 'Facture avoir', path: paths.app.invoicing.creditNote.path },
+      { tache: 'Rapport_à_facturer', name: 'Rapport à facturer' },
+      { tache: 'Rapport_à_facturer_Global', name: 'Rapport par projet' },
+      { tache: 'Creation_facture1', name: 'Création facture' },
+      { tache: 'Consultation_Edition', name: 'Consultation/Edition' },
+      { tache: 'Attachement', name: 'Attachement' },
+      { tache: 'Etat_livraison_Factures', name: 'État livraison Factures' },
+      { tache: 'Autres_factures', name: 'Autres factures' },
+      { tache: 'Factures_annulées', name: 'Factures annulées' },
+      { tache: 'Pré_facture_BL', name: 'Pré-facture (BL)' },
+      { tache: 'Facture_avoir', name: 'Facture avoir' },
     ],
   },
   {
     name: 'Règlements Clients',
     icon: '💵',
-    permission: 'clientPayments:view',
+    module: 'REGLEMENT CLIENT',
     subItems: [
-      { name: 'Nouveau', path: paths.app.clientPayments.new.path },
-      { name: 'Avance', path: paths.app.clientPayments.advance.path },
-      { name: 'Consulter Règlements', path: paths.app.clientPayments.view.path },
-      { name: 'En instance', path: paths.app.clientPayments.pending.path },
-      { name: 'Suivi paiement factures', path: paths.app.clientPayments.invoiceTracking.path },
-      { name: 'État Impayé', path: paths.app.clientPayments.unpaid.path },
+      { tache: 'Nv_reg_clt', name: 'Nouveau' },
+      { tache: 'Avance', name: 'Avance' },
+      { tache: 'Consulter_rg_clt', name: 'Consulter' },
+      { tache: 'En_instance', name: 'En instance' },
+      { tache: 'Suivi_reglement', name: 'Suivi paiement factures' },
+      { tache: 'Relevé_Client', name: 'Relevé Client' },
+      { tache: 'Situation_Globale', name: 'Situation Globale/projet' },
+      { tache: 'Règlement_annulés', name: 'Règlements annulés' },
+    ],
+  },
+  {
+    name: 'Bordereaux',
+    icon: '📦',
+    module: 'BORDEREAUX',
+    subItems: [
+      { tache: 'Bordereau_à_faire', name: 'Bordereau à faire' },
+      { tache: 'Creation', name: 'Modification/Edition' },
+      { tache: 'Consultation', name: 'Livraison' },
     ],
   },
   {
     name: 'Achats',
     icon: '🛒',
-    permission: 'purchases:view',
+    module: 'ACHATS',
     subItems: [
-      { name: 'Paramétrage', path: paths.app.purchases.settings.path },
-      { name: 'Fournisseur', path: paths.app.purchases.supplier.path },
-      { name: 'Dossier Achat', path: paths.app.purchases.file.path },
-      { name: 'Dépense fournisseurs', path: paths.app.purchases.expense.path },
-      { name: 'Règlements fournisseurs', path: paths.app.purchases.payments.path },
-      { name: 'Budget et Objectif', path: paths.app.purchases.budget.path },
+      { tache: 'OPT_Fournisseur', name: 'Fournisseur' },
+      { tache: 'Demande_et_Validation', name: 'Demande et Validation' },
+      { tache: 'Dossier_Achat', name: 'Dossier Achat' },
+      { tache: 'Facture_FOURNISSEUR', name: 'Dépense fournisseurs' },
+      { tache: 'Reglement', name: 'Règlement Fournisseur' },
+      { tache: 'Budget', name: 'Budget et Objectif' },
     ],
   },
   {
     name: 'Personnel',
     icon: '👥',
-    permission: 'personnel:view',
+    module: 'PERSONNEL',
     subItems: [
-      { name: 'Dossier Salarié', path: paths.app.personnel.employee.path },
-      { name: 'Dossier Administratif', path: paths.app.personnel.administrative.path },
-      { name: 'Expérience', path: paths.app.personnel.experience.path },
-      { name: 'Droit congé', path: paths.app.personnel.leaveRights.path },
-      { name: 'Congé', path: paths.app.personnel.leave.path },
-      { name: 'Paie', path: paths.app.personnel.payroll.path },
+      { tache: 'OPT_Dossier_Salarié', name: 'Dossier Salarié' },
+      { tache: 'Dossier_Administratif', name: 'Dossier Administratif' },
+      { tache: 'Droit_congé', name: 'Droit congé' },
+      { tache: 'OPT_Congé', name: 'Congé' },
+      { tache: 'Préparation_paie', name: 'Paie' },
     ],
   },
   {
     name: 'Trésorerie',
     icon: '🏦',
-    permission: 'treasury:view',
+    module: 'TRESORERIE',
     subItems: [
-      { name: 'Situation', path: paths.app.treasury.situation.path },
-      { name: 'Banque', path: paths.app.treasury.bank.path },
-      { name: 'Dépenses', path: paths.app.treasury.expenses.path },
-      { name: 'Caisse siège', path: paths.app.treasury.hqCash.path },
-      { name: 'Caisse agence', path: paths.app.treasury.branchCash.path },
-      { name: 'Caisse employé', path: paths.app.treasury.employeeCash.path },
+      { tache: 'Situation1', name: 'Situation' },
+      { tache: 'Banque1', name: 'Banque' },
+      { tache: 'Dépenses', name: 'Dépenses' },
+      { tache: 'Caisse_siège', name: 'Caisse siège' },
+      { tache: 'Caisse_agence', name: 'Caisse agence' },
+      { tache: 'Caisse_employé', name: 'Caisse employé' },
     ],
   },
   {
     name: 'Logistique',
     icon: '🚚',
-    permission: 'logistics:view',
+    module: 'Logistique',
     subItems: [
-      { name: 'Véhicules', path: paths.app.logistics.vehicles.path },
-      { name: 'Foyers', path: paths.app.logistics.facilities.path },
-      { name: 'Matériel', path: paths.app.logistics.equipment.path },
-      { name: 'Autre Matériel', path: paths.app.logistics.otherEquipment.path },
-      { name: 'Crédit & loyer', path: paths.app.logistics.creditRent.path },
+      { tache: 'Véhicules', name: 'Véhicules' },
+      { tache: 'Loyer', name: 'Loyer' },
+      { tache: 'Matériel', name: 'Matériel' },
+      { tache: 'Autres1', name: 'Autres matériels' },
+      { tache: 'Autres_Mouvements', name: 'Crédit & loyer' },
     ],
   },
   {
     name: 'Clients',
     icon: '🏢',
-    permission: 'clients:view',
+    module: 'CLIENTS',
     subItems: [
-      { name: 'Mise à jours', path: paths.app.clients.update.path },
-      { name: 'Situation Clients', path: paths.app.clients.situation.path },
-      { name: 'Situation Client/Projet', path: paths.app.clients.projectSituation.path },
-      { name: 'Liste rapports facturés', path: paths.app.clients.billedReports.path },
+      { tache: 'Mise_à_jours', name: 'Mise à jours' },
+      { tache: 'Situation_Clients', name: 'Situation Clients' },
+      { tache: 'Situation_Client_Globale', name: 'Liste rapports facturés' },
+      { tache: 'Situation_client_Facture', name: 'Situation client/Facture' },
     ],
   },
   {
     name: 'Messagerie',
     icon: '✉️',
-    permission: 'messaging:view',
+    module: 'Messagerie',
     subItems: [
-      { name: 'Envoi courrier', path: paths.app.messaging.sendMail.path },
-      { name: 'Réception courrier', path: paths.app.messaging.receiveMail.path },
-      { name: 'Message interne', path: paths.app.messaging.internal.path },
-      { name: 'Remarque application', path: paths.app.messaging.appRemark.path },
+      { tache: 'Envoi_courrier', name: 'Envoi courrier' },
+      { tache: 'Reception1', name: 'Réception courrier' },
+      { tache: 'Message', name: 'Message interne' },
+      { tache: 'Demande_annulation', name: 'Demande annulation' },
+      { tache: 'Demande_ajout_client', name: 'Demande ajout client' },
     ],
   },
   {
     name: 'G.E.D',
     icon: '📁',
-    permission: 'documents:view',
+    module: 'GED',
     subItems: [
-      { name: 'Télécharger document', path: paths.app.documentManagement.upload.path },
-      { name: 'Scanner document', path: paths.app.documentManagement.scan.path },
-      { name: 'Rechercher documents', path: paths.app.documentManagement.search.path },
-      { name: 'Supprimer document', path: paths.app.documentManagement.delete.path },
+      { tache: 'Telecharger_document', name: 'Télécharger document' },
+      { tache: 'Scanner_document_papier', name: 'Scanner document' },
+      { tache: 'Rechercher_documents', name: 'Rechercher documents' },
+      { tache: 'Supprimer_document', name: 'Supprimer document' },
     ],
   },
   {
     name: 'Paramétrage',
     icon: '⚙️',
-    permission: 'settings:view',
+    module: 'PARAMETRAGE',
     subItems: [
-      { name: 'Global', path: paths.app.settings.global.path },
-      { name: 'Projets', path: paths.app.settings.projects.path },
-      { name: 'Métier', path: paths.app.settings.profession.path },
-      { name: 'Société', path: paths.app.settings.company.path },
-      { name: 'Utilisateur', path: paths.app.settings.user.path },
+      { tache: 'Global1', name: 'Global' },
+      { tache: 'Société', name: 'Société' },
+      { tache: 'Utilisateur', name: 'Utilisateur' },
+      { tache: 'Connexion', name: 'Connexion' },
+      { tache: 'Initiation_Table', name: 'Initiation Table' },
     ],
   },
   {
     name: 'Droits',
     icon: '🔐',
-    permission: 'rights:view',
+    module: 'DROITS',
     subItems: [
-      { name: 'Menu Administrateur', path: paths.app.rights.adminMenu.path },
-      { name: 'Menu Fonctionnelle', path: paths.app.rights.functionalMenu.path },
-      { name: 'Liste des Tâches', path: paths.app.rights.taskList.path },
-      { name: 'Régions et Villes', path: paths.app.rights.regions.path },
+      { tache: 'Mnu', name: 'Menu Administrateur' },
+      { tache: 'Menu_Fonctionnelle', name: 'Menu Fonctionnelle' },
+      { tache: 'Tâches', name: 'Liste des Tâches' },
+      { tache: 'Client', name: 'Client' },
+      { tache: 'Agence', name: 'Agence' },
     ],
   },
 ];
 
 export const Sidebar = ({ isOpen, onToggle, user, onLogout }) => {
-  const { checkPermission } = useAuthorization();
+  const { hasTache, hasModuleAccess } = useAuthorization();
   const [expandedMenus, setExpandedMenus] = useState({});
 
+  // Filter menu items based on user's taches
+  const visibleMenu = useMemo(() => {
+    return menuStructure
+      .map((item) => {
+        // Dashboard is always visible
+        if (item.module === null) return item;
+
+        // Check if user has ANY tache in this module
+        if (!hasModuleAccess(item.module)) return null;
+
+        // Filter subItems to only show pages the user has access to
+        if (item.subItems) {
+          const visibleSubItems = item.subItems.filter((sub) => {
+            const mapping = TACHE_ROUTE_MAP[sub.tache];
+            // Only show if user has the tache AND it has a navigable path
+            return hasTache(sub.tache) && mapping?.path;
+          });
+
+          if (visibleSubItems.length === 0) return null;
+
+          return { ...item, subItems: visibleSubItems };
+        }
+
+        return item;
+      })
+      .filter(Boolean);
+  }, [user, hasTache, hasModuleAccess]);
+
   const toggleSubMenu = (menuName) => {
-    setExpandedMenus(prev => ({
+    setExpandedMenus((prev) => ({
       ...prev,
-      [menuName]: !prev[menuName]
+      [menuName]: !prev[menuName],
     }));
   };
 
@@ -260,9 +303,7 @@ export const Sidebar = ({ isOpen, onToggle, user, onLogout }) => {
       </div>
 
       <nav className="sidebar-nav">
-        {navItems.map((item) => {
-          if (!checkPermission(item.permission)) return null;
-
+        {visibleMenu.map((item) => {
           const hasSubItems = item.subItems && item.subItems.length > 0;
           const isExpanded = expandedMenus[item.name];
 
@@ -284,17 +325,20 @@ export const Sidebar = ({ isOpen, onToggle, user, onLogout }) => {
                   </div>
                   {isOpen && isExpanded && (
                     <div className="sub-menu">
-                      {item.subItems.map((subItem) => (
-                        <NavLink
-                          key={subItem.path}
-                          to={subItem.path}
-                          className={({ isActive }) =>
-                            `nav-item sub-item ${isActive ? 'active' : ''}`
-                          }
-                        >
-                          <span className="nav-text">{subItem.name}</span>
-                        </NavLink>
-                      ))}
+                      {item.subItems.map((subItem) => {
+                        const mapping = TACHE_ROUTE_MAP[subItem.tache];
+                        return (
+                          <NavLink
+                            key={mapping.path}
+                            to={mapping.path}
+                            className={({ isActive }) =>
+                              `nav-item sub-item ${isActive ? 'active' : ''}`
+                            }
+                          >
+                            <span className="nav-text">{subItem.name}</span>
+                          </NavLink>
+                        );
+                      })}
                     </div>
                   )}
                 </>
@@ -317,9 +361,7 @@ export const Sidebar = ({ isOpen, onToggle, user, onLogout }) => {
       <div className="sidebar-footer">
         {isOpen && user && (
           <div className="user-info">
-            <span className="user-name">
-              {user.firstName} {user.full_name}
-            </span>
+            <span className="user-name">{user.full_name}</span>
             <span className="user-role">{user.lib_fonction_person}</span>
           </div>
         )}

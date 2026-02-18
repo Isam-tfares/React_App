@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const DocumentsHistoryRoute = () => {
   return (
     <ContentLayout title="Historique mouvement">
-      <Authorization permission="documents:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="maj_referencement" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Historique mouvement</h1>
       </Authorization>
     </ContentLayout>

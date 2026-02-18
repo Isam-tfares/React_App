@@ -124,7 +124,7 @@ export const LoginForm = () => {
       <div style={{ marginTop: '16px', textAlign: 'center', fontSize: '14px', color: '#666' }}>
         <p>Utilisateurs de test:</p>
         <p style={{ fontSize: '12px', marginTop: '8px' }}>
-          <strong>admin</strong> / password123
+          <strong>064</strong> / 123456
         </p>
       </div>
     </div>

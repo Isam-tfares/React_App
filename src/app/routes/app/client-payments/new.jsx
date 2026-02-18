@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ClientPaymentsNewRoute = () => {
   return (
     <ContentLayout title="Nouveau Règlement">
-      <Authorization permission="clientPayments:create" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Nv_reg_clt" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Nouveau Règlement</h1>
       </Authorization>
     </ContentLayout>

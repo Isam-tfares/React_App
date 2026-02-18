@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ProjectsAssignmentsRoute = () => {
   return (
     <ContentLayout title="Changement des affectations">
-      <Authorization permission="projects:edit" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="BTN_Supprimer_projets2" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Changement des affectations</h1>
       </Authorization>
     </ContentLayout>

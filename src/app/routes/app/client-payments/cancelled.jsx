@@ -4,7 +4,7 @@ import { Authorization } from '../../../../lib/authorization';
 const ClientPaymentsCancelledRoute = () => {
   return (
     <ContentLayout title="Règlements annulés">
-      <Authorization permission="clientPayments:view" forbiddenFallback={<div>Accès refusé.</div>}>
+      <Authorization tache="Règlement_annulés" forbiddenFallback={<div>Accès refusé.</div>}>
         <h1>Règlements annulés</h1>
       </Authorization>
     </ContentLayout>
