@@ -21,6 +21,8 @@ const PageLoader = () => (
 export const AppRoutes = () => {
   return (
     <Routes>
+
+      <Route path= '/demo'  element= {<DemoPage />} />
       {/* Public routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />

@@ -9,6 +9,7 @@ import { AuthLayout, DashboardLayout } from '../components/layouts';
 import LoginRoute from './routes/public/login';
 import RegisterRoute from './routes/public/register';
 import DashboardRoute from './routes/app/dashboard';
+import DemoPage from './routes/public/DemoPage'
 
 // Loading component
 const LoadingFallback = () => (
@@ -193,6 +194,10 @@ const RightsClientRoute = lazy(() => import('./routes/app/rights/client'));
 const RightsRegionsRoute = lazy(() => import('./routes/app/rights/regions'));
 
 export const router = createBrowserRouter([
+  {
+    path: '/demo',
+    element: <DemoPage />,
+  },
   // Public routes
   {
     element: <AuthLayout />,
